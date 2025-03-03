@@ -17,7 +17,7 @@ resource "google_project_service" "enable_services" {
 }
 
 module "iam" {
-  source         = "./modules/iam"
-  project_id     = var.project_id
-  region         = var.region
+  source     = "./modules/iam"
+  project_id = var.project_id
+  region     = var.region
 }
