@@ -32,3 +32,17 @@ module "billing" {
   project_id      = var.project_id
   region          = var.region
 }
+
+module "storage" {
+  source           = "./modules/storage"
+  project_id       = var.project_id
+  storage_location = var.storage_location
+}
+
+module "functions" {
+  source           = "./modules/functions"
+  project_id       = var.project_id
+  region           = var.region
+  billing_account  = var.billing_account
+  storage_location = var.storage_location
+}
