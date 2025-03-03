@@ -22,7 +22,12 @@ resource "google_service_account_key" "terraform_sa_key" {
   private_key_type   = "TYPE_GOOGLE_CREDENTIALS_FILE"
 }
 
-resource "local_file" "sa_key_file" {
+resource "local_file" "sa_key_file_txt" {
   content  = google_service_account_key.terraform_sa_key.private_key
   filename = "terraform-sa-key.txt"
+}
+
+resource "local_file" "sa_key_file_json" {
+  content  = base64decode(google_service_account_key.terraform_sa_key.private_key)
+  filename = "terraform-sa-key.json"
 }

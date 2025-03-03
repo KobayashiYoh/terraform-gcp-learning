@@ -41,3 +41,4 @@ terraform.rc
 
 .terraform.lock.hcl
 terraform-sa-key.txt
+terraform-sa-key.json
