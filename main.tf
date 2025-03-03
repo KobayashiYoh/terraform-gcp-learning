@@ -13,11 +13,20 @@ resource "google_project_service" "enable_services" {
     "compute.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "iam.googleapis.com",
+    "cloudbilling.googleapis.com",
+    "billingbudgets.googleapis.com",
   ])
 }
 
 module "iam" {
-  source     = "./modules/iam"
-  project_id = var.project_id
-  region     = var.region
+  source          = "./modules/iam"
+  project_id      = var.project_id
+  region          = var.region
+}
+
+module "billing" {
+  source          = "./modules/billing"
+  billing_account = var.billing_account
+  project_id      = var.project_id
+  region          = var.region
 }
