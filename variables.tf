@@ -1,5 +1,5 @@
 variable "project_id" {
-  default = "terraform-gcp-learning-yo"
+  default = "terraform-gcp-learning-yo2"
 }
 variable "region" {
   default = "asia-northeast1"
