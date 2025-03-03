@@ -15,6 +15,8 @@ resource "google_project_service" "enable_services" {
     "iam.googleapis.com",
     "cloudbilling.googleapis.com",
     "billingbudgets.googleapis.com",
+    "firebase.googleapis.com",
+    "firebaserules.googleapis.com",
   ])
 }
 
