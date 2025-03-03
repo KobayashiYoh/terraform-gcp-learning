@@ -3,7 +3,6 @@ name: 'CI Terraform'
 on:
   push:
     branches: [ "main", "feature/**" ]
-  pull_request:
 
 permissions:
   contents: read
