@@ -23,6 +23,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Generate gcp-sa-key.json from secrets.GCP_SA_KEY
+      - name: Setup Google Cloud authentication
+        run: echo "${{ secrets.GCP_SA_KEY }}" > gcp-sa-key.json
+
+      # Log in to Google Cloud using key file
+      - name: Authenticate with Google Cloud
+        run: gcloud auth activate-service-account --key-file=gcp-sa-key.json
+
       # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
