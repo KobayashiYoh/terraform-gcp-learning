@@ -25,7 +25,7 @@ jobs:
 
       # Generate gcp-sa-key.json from secrets.GCP_SA_KEY
       - name: Setup Google Cloud authentication
-        run: echo "${{ secrets.GCP_SA_KEY }}" | base64 --decode > gcp-sa-key.json
+        run: echo "${{ secrets.GCP_TERRAFORM_SERVICE_ACCOUNT_KEY }}" | base64 --decode > gcp-sa-key.json
 
       # Log in to Google Cloud using key file
       - name: Authenticate with Google Cloud
