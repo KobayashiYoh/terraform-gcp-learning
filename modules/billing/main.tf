@@ -12,10 +12,10 @@ terraform {
 }
 
 provider "google" {
-  credentials     = try(file("../../gcp-terraform-sa-key.json"), null)
-  project         = var.project_id
-  billing_project = var.project_id
-  region          = var.region
+  credentials           = try(file("../../gcp-terraform-sa-key.json"), null)
+  project               = var.project_id
+  billing_project       = var.project_id
+  region                = var.region
   user_project_override = true
 }
 
