@@ -40,12 +40,12 @@ resource "google_storage_bucket" "function_bucket" {
 
 data "archive_file" "default" {
   type        = "zip"
-  output_path = "dist/functions.zip"
-  source_dir  = "./modules/functions/functions/src"
+  output_path = "dist/functions-project.zip"
+  source_dir  = "./modules/functions/functions-project/dist"
 }
 
 resource "google_storage_bucket_object" "function_archive" {
-  name   = "functions.zip"
+  name   = "functions-project.zip"
   bucket = google_storage_bucket.function_bucket.name
   source = data.archive_file.default.output_path
 }
@@ -68,7 +68,7 @@ resource "google_cloudfunctions2_function" "billing_alert" {
 
   build_config {
     runtime     = "nodejs20"
-    entry_point = "sendAlert"
+    entry_point = "helloWorldToDiscord"
 
     source {
       storage_source {

@@ -42,4 +42,4 @@ terraform.rc
 .terraform.lock.hcl
 gcp-terraform-sa-key.txt
 gcp-terraform-sa-key.json
-functions.zip
+dist/**
