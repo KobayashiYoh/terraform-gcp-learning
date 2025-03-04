@@ -23,6 +23,7 @@ resource "google_project_service" "enable_services" {
     "cloudbuild.googleapis.com",
     "eventarc.googleapis.com",
     "run.googleapis.com",
+    "artifactregistry.googleapis.com",
   ])
 }
 
@@ -40,9 +41,10 @@ module "billing" {
 }
 
 module "functions" {
-  source           = "./modules/functions"
-  project_id       = var.project_id
-  region           = var.region
-  billing_account  = var.billing_account
-  storage_location = var.storage_location
+  source              = "./modules/functions"
+  project_id          = var.project_id
+  region              = var.region
+  billing_account     = var.billing_account
+  storage_location    = var.storage_location
+  discord_webhook_url = var.discord_webhook_url
 }

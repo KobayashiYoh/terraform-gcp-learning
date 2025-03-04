@@ -2,6 +2,7 @@ variable "project_id" {}
 variable "region" {}
 variable "billing_account" {}
 variable "storage_location" {}
+variable "discord_webhook_url" {}
 
 terraform {
   required_providers {
@@ -39,8 +40,8 @@ resource "google_storage_bucket" "function_bucket" {
 
 data "archive_file" "default" {
   type        = "zip"
-  source_dir  = "./"
-  output_path = "./functions.zip"
+  output_path = "dist/functions.zip"
+  source_dir  = "./modules/functions/functions/src"
 }
 
 resource "google_storage_bucket_object" "function_archive" {
@@ -81,12 +82,12 @@ resource "google_cloudfunctions2_function" "billing_alert" {
     available_memory = "256M"
     timeout_seconds  = 60
     environment_variables = {
-      DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/XXXX/YYYY"
+      DISCORD_WEBHOOK_URL = var.discord_webhook_url
     }
   }
 
   event_trigger {
-    trigger_region = "us-central1"
+    trigger_region = var.region
     event_type     = "google.cloud.pubsub.topic.v1.messagePublished"
     pubsub_topic   = google_pubsub_topic.billing_alert.id
   }
