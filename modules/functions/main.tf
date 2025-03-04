@@ -13,22 +13,51 @@ terraform {
 }
 
 provider "google" {
-  credentials           = try(file("gcp-terraform-sa-key.json"), null)
+  user_project_override = true
+  credentials           = file("gcp-terraform-sa-key.json")
   project               = var.project_id
   billing_project       = var.project_id
   region                = var.region
-  user_project_override = true
+
+}
+
+provider "google" {
+  alias                 = "no_user_project_override"
+  user_project_override = false
+  credentials           = file("gcp-terraform-sa-key.json")
+  project               = var.project_id
+  billing_project       = var.project_id
+  region                = var.region
 }
 
 resource "google_storage_bucket" "function_bucket" {
-  name     = "function-bucket-${var.project_id}"
-  location = var.storage_location
+  provider                    = google.no_user_project_override
+  name                        = "function-bucket-${var.project_id}"
+  location                    = var.storage_location
+  uniform_bucket_level_access = true
+}
+
+data "archive_file" "default" {
+  type        = "zip"
+  source_dir  = "./"
+  output_path = "./functions.zip"
 }
 
 resource "google_storage_bucket_object" "function_archive" {
-  name   = "function-source.zip"
-  source = "function-source.zip"
+  name   = "functions.zip"
   bucket = google_storage_bucket.function_bucket.name
+  source = data.archive_file.default.output_path
+}
+
+resource "google_pubsub_topic" "billing_alert" {
+  provider = google.no_user_project_override
+  name     = "billing-alert-topic"
+}
+
+resource "google_pubsub_subscription" "billing_subscription" {
+  provider = google.no_user_project_override
+  name     = "billing-alerts-subscription"
+  topic    = google_pubsub_topic.billing_alert.name
 }
 
 resource "google_cloudfunctions2_function" "billing_alert" {
@@ -61,10 +90,6 @@ resource "google_cloudfunctions2_function" "billing_alert" {
     event_type     = "google.cloud.pubsub.topic.v1.messagePublished"
     pubsub_topic   = google_pubsub_topic.billing_alert.id
   }
-}
-
-resource "google_pubsub_topic" "billing_alert" {
-  name = "billing-alert-topic"
 }
 
 output "function_url" {
