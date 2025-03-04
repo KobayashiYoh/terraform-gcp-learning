@@ -8,6 +8,7 @@
     "axios": "^1.8.1"
   },
   "scripts": {
-    "deploy": "gcloud functions deploy sample --gen2 --runtime=nodejs18 --trigger-http --allow-unauthenticated"
+    "build": "tsc",
+    "start": "node dist/index.js"
   }
 }
