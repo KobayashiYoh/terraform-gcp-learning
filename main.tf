@@ -10,6 +10,7 @@ resource "google_project_service" "enable_services" {
   service = each.key
 
   for_each = toset([
+    "serviceusage.googleapis.com",
     "compute.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "iam.googleapis.com",
@@ -17,6 +18,11 @@ resource "google_project_service" "enable_services" {
     "billingbudgets.googleapis.com",
     "firebase.googleapis.com",
     "firebaserules.googleapis.com",
+    "pubsub.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "eventarc.googleapis.com",
+    "run.googleapis.com",
   ])
 }
 

@@ -1,15 +1,41 @@
 variable "project_id" {}
 variable "region" {}
 
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.0"
+    }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "~> 5.0"
+    }
+  }
+}
+
+provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
 resource "google_service_account" "terraform_sa" {
   account_id   = "terraform-sa"
   display_name = "Terraform Service Account"
 }
 
 resource "google_project_iam_member" "terraform_sa_roles" {
+  # TODO: 現在はコンソールとTerraformの両方でSAのroleを管理しているため、Terraformで一元管理したい。
   for_each = toset([
     "roles/editor",
     "roles/storage.admin",
+    "roles/cloudfunctions.admin",
+    "roles/iam.serviceAccountUser",
+    "roles/logging.admin",
+    "roles/eventarc.admin",
+    "roles/cloudbuild.builds.editor",
+    "roles/run.admin",
+    "roles/artifactregistry.reader",
   ])
   project = var.project_id
   role    = each.value
@@ -24,10 +50,10 @@ resource "google_service_account_key" "terraform_sa_key" {
 
 resource "local_file" "sa_key_file_txt" {
   content  = google_service_account_key.terraform_sa_key.private_key
-  filename = "terraform-sa-key.txt"
+  filename = "gcp-terraform-sa-key.txt"
 }
 
 resource "local_file" "sa_key_file_json" {
   content  = base64decode(google_service_account_key.terraform_sa_key.private_key)
-  filename = "terraform-sa-key.json"
+  filename = "gcp-terraform-sa-key.json"
 }
