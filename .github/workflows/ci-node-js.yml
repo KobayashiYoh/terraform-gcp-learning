@@ -6,8 +6,8 @@ name: Node.js CI
 on:
   push:
     branches: [ "main", "feature/**" ]
-    paths:
-      - 'modules/functions/functions-project/**'
+    # paths:
+    #   - 'modules/functions/functions-project/**'
 
 jobs:
   build:
