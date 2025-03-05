@@ -47,8 +47,4 @@ module "functions" {
   billing_account     = var.billing_account
   storage_location    = var.storage_location
   discord_webhook_url = var.discord_webhook_url
-
-  providers = {
-    google = google
-  }
 }
