@@ -4,8 +4,8 @@
   "description": "Node.js project for Cloud Functions",
   "main": "dist/index.js",
   "scripts": {
-    "build": "esbuild ./src/index.js --bundle --minify --sourcemap --platform=node --format=cjs --outfile=./dist/index.js",
-    "postbuild": "cp package.json ./dist/package.json && cd dist && npm install",
+    "build": "esbuild ./src/index.js --bundle --minify --sourcemap --platform=node --format=cjs --outfile=./dist/src/index.js",
+    "postbuild": "cp package.json ./dist/package.json && cp package-lock.json ./dist/package-lock.json && cp ./dist/src/index.js ./dist/index.js",
     "deploy": "gcloud functions deploy hello-world-to-discord --gen2 --runtime=nodejs20 --region=asia-northeast1 --trigger-http --allow-unauthenticated --memory=128Mi"
   },
   "author": "",

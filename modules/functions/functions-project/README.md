@@ -10,6 +10,5 @@ Cloud Functions で呼び出す関数を定義するための Node.js プロジ�
 cd modules/functions/functions-project
 npm install
 npm run build
-npm run postbuild
 npm run deploy
 ```

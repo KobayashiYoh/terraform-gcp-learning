@@ -38,27 +38,23 @@ resource "google_storage_bucket" "function_bucket" {
   uniform_bucket_level_access = true
 }
 
+resource "null_resource" "build" {
+  provisioner "local-exec" {
+    command = "pwd && ls -a npm install && npm run build"
+    working_dir = "./modules/functions/functions-project"
+  }
+}
+
 data "archive_file" "default" {
   type        = "zip"
-  output_path = "dist/functions-project.zip"
   source_dir  = "./modules/functions/functions-project/dist"
+  output_path = "dist/functions-project.zip"
 }
 
 resource "google_storage_bucket_object" "function_archive" {
   name   = "functions-project.zip"
   bucket = google_storage_bucket.function_bucket.name
   source = data.archive_file.default.output_path
-}
-
-resource "google_pubsub_topic" "billing_alert" {
-  provider = google.no_user_project_override
-  name     = "billing-alert-topic"
-}
-
-resource "google_pubsub_subscription" "billing_subscription" {
-  provider = google.no_user_project_override
-  name     = "billing-alerts-subscription"
-  topic    = google_pubsub_topic.billing_alert.name
 }
 
 resource "google_cloudfunctions2_function" "billing_alert" {
@@ -93,6 +89,17 @@ resource "google_cloudfunctions2_function" "billing_alert" {
   }
 }
 
-output "function_url" {
-  value = google_cloudfunctions2_function.billing_alert.service_config[0].uri
+resource "google_pubsub_topic" "billing_alert" {
+  provider = google.no_user_project_override
+  name     = "billing-alert-topic"
+}
+
+resource "google_pubsub_subscription" "billing_subscription" {
+  provider = google.no_user_project_override
+  name     = "billing-alerts-subscription"
+  topic    = google_pubsub_topic.billing_alert.name
+
+  push_config {
+    push_endpoint = google_cloudfunctions2_function.billing_alert.service_config[0].uri
+  }
 }
