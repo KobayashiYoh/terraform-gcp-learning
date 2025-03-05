@@ -8,6 +8,7 @@ async function sendToDiscord() {
     "$1****/****"
   );
   try {
+    // FIXME: avater_urlがDiscord Botに反映されていないので修正する（優先度・低）
     await axios.post(process.env.DISCORD_WEBHOOK_URL, {
       username: "Google Cloud Billing Alert Bot",
       avater_url:
