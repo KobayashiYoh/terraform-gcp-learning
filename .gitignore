@@ -40,5 +40,6 @@ terraform.rc
 # End of https://www.toptal.com/developers/gitignore/api/terraform
 
 .terraform.lock.hcl
-terraform-sa-key.txt
-terraform-sa-key.json
+gcp-terraform-sa-key.txt
+gcp-terraform-sa-key.json
+dist/**

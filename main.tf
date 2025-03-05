@@ -10,6 +10,7 @@ resource "google_project_service" "enable_services" {
   service = each.key
 
   for_each = toset([
+    "serviceusage.googleapis.com",
     "compute.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "iam.googleapis.com",
@@ -17,6 +18,12 @@ resource "google_project_service" "enable_services" {
     "billingbudgets.googleapis.com",
     "firebase.googleapis.com",
     "firebaserules.googleapis.com",
+    "pubsub.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "eventarc.googleapis.com",
+    "run.googleapis.com",
+    "artifactregistry.googleapis.com",
   ])
 }
 
@@ -31,4 +38,13 @@ module "billing" {
   billing_account = var.billing_account
   project_id      = var.project_id
   region          = var.region
+}
+
+module "functions" {
+  source              = "./modules/functions"
+  project_id          = var.project_id
+  region              = var.region
+  billing_account     = var.billing_account
+  storage_location    = var.storage_location
+  discord_webhook_url = var.discord_webhook_url
 }
