@@ -1,25 +1,6 @@
 variable "project_id" {}
 variable "region" {}
 
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 5.0"
-    }
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = "~> 5.0"
-    }
-  }
-}
-
-provider "google" {
-  credentials = file("gcp-terraform-sa-key.json")
-  project     = var.project_id
-  region      = var.region
-}
-
 resource "google_service_account" "terraform_sa" {
   account_id   = "terraform-sa"
   display_name = "Terraform Service Account"

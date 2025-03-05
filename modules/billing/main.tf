@@ -2,25 +2,7 @@ variable "billing_account" {}
 variable "project_id" {}
 variable "region" {}
 
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 5.0"
-    }
-  }
-}
-
-provider "google" {
-  credentials           = file("gcp-terraform-sa-key.json")
-  project               = var.project_id
-  billing_project       = var.project_id
-  region                = var.region
-  user_project_override = true
-}
-
 resource "google_billing_budget" "budget" {
-  provider        = google
   billing_account = var.billing_account
   display_name    = "Billing Budget"
 
