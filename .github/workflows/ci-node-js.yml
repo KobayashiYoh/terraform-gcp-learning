@@ -9,6 +9,10 @@ on:
     # paths:
     #   - 'modules/functions/functions-project/**'
 
+defaults:
+  run:
+    working-directory: modules/functions/functions-project
+
 jobs:
   build:
 
