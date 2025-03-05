@@ -40,8 +40,12 @@ resource "google_storage_bucket" "function_bucket" {
 
 resource "null_resource" "build" {
   provisioner "local-exec" {
-    command = "pwd && ls -a npm install && npm run build"
+    command     = "pwd && ls -a && npm install && npm run build"
     working_dir = "./modules/functions/functions-project"
+  }
+
+  triggers = {
+    always_run = "${timestamp()}"
   }
 }
 
@@ -49,6 +53,7 @@ data "archive_file" "default" {
   type        = "zip"
   source_dir  = "./modules/functions/functions-project/dist"
   output_path = "dist/functions-project.zip"
+  depends_on  = [null_resource.build]
 }
 
 resource "google_storage_bucket_object" "function_archive" {
@@ -58,7 +63,7 @@ resource "google_storage_bucket_object" "function_archive" {
 }
 
 resource "google_cloudfunctions2_function" "billing_alert" {
-  name        = "billing-alert"
+  name        = "billing-alert3"
   description = "Billing Alert Function"
   location    = var.region
 
@@ -86,6 +91,13 @@ resource "google_cloudfunctions2_function" "billing_alert" {
     trigger_region = var.region
     event_type     = "google.cloud.pubsub.topic.v1.messagePublished"
     pubsub_topic   = google_pubsub_topic.billing_alert.id
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    replace_triggered_by = [
+      google_storage_bucket_object.function_archive
+    ]
   }
 }
 
